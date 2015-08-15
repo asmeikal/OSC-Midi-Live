@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     DEBUG_ASSERT_CRITICAL(argc == 3, "usage: test_termios [dev_name] [baudrate]\n");
 
     int fd;
-    fd = connectArduino(argv[1], (speed_t) atoi(argv[2]));
+    fd = connectArduino(argv[1], atoi(argv[2]));
 
     DEBUG_ASSERT_CRITICAL(0 <= fd, "unable to open device: %s\n", strerror(errno));
 

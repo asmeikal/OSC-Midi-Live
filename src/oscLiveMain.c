@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         DEBUG_ASSERT_CRITICAL(NULL != dev_name, "invalid device name\n");
         dev_vars = strtok(NULL, ":");
         DEBUG_ASSERT_CRITICAL(NULL != dev_vars, "invalid device name\n");
-        fd = connectArduino(dev_name, (speed_t) atoi(argv[2]));
+        fd = connectArduino(dev_name, atoi(argv[2]));
         DEBUG_ASSERT_CRITICAL(0 <= fd, "can't open serial %s: %s\n", argv[dev_n], strerror(errno));
         (void) snprintf(name, 16, "arduino%d", (dev_n - 2));
         mb = createMessageBuffer(atoi(dev_vars), name);
