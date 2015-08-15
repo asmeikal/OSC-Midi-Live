@@ -1,3 +1,6 @@
+#ifndef __MIDI_POLL_SERIAL_H
+#define __MIDI_POLL_SERIAL_H
+
 
 // defines for setting and clearing register bits
 #ifndef cbi
@@ -8,7 +11,6 @@
 #endif
 
 #define RESETPIN  2
-#define LEDPIN    6
 
 #define READMAX   1023U
 #define READMIN   0
@@ -20,7 +22,7 @@
 
 #define BUFFSIZE  20
 
-#define MAKEBUFF(x)   int buffer ## x [BUFFSIZE] = {0}
+#define MAKEBUFF(x)   int buffer ## x [BUFFSIZE] = {0};
 #define BUFF(x)       buffer ## x
 #define GETVALUE(x)   readValue ## x ()
 
@@ -46,7 +48,7 @@ unsigned int reduction[][2] =
  {11,  579},
  {1,   294}};
 
-#define READVALUE(x)  \
+#define READVALUEFUNC(x)  \
 unsigned int readValue ## x (void) { \
   unsigned int i, ret = 0; \
   for(i = 0; i+1 < BUFFSIZE; ++i) { \
@@ -57,39 +59,9 @@ unsigned int readValue ## x (void) { \
   return min(ret + BUFF(x)[BUFFSIZE-1], READMAX); \
 }
 
-MAKEBUFF(A0);
-MAKEBUFF(A1);
-READVALUE(A0)
-READVALUE(A1)
+/**
+ * Usage: for each analog pin, use MAKEBUFF(x) and READVALUEFUNC(x), then retrieve values with GETVALUE(x)
+ */
 
-void setup() {
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, HIGH);
-  
-  // set prescale to 16
-  sbi(ADCSRA, ADPS2);
-  cbi(ADCSRA, ADPS1);
-  cbi(ADCSRA, ADPS0);
+#endif
 
-  Serial.begin(115200);
-//  digitalWrite(LEDPIN, LOW);
-
-}
-
-unsigned char message[6] = {0};
-
-unsigned int tmp;
-
-void loop() {
-  tmp = GETVALUE(A0);
-//  Serial.println(tmp);
-//  return;
-  message[0] = map(tmp, READMIN, READMAX, SENDMIN, SENDMAX);
-  tmp = GETVALUE(A1);
-  message[2] = map(tmp, READMIN, READMAX, SENDMIN, SENDMAX);
-  message[1] = message[3] = MIDBITS;
-  message[4] = message[5] = ENDBITS;
-  digitalWrite(LEDPIN, LOW);
-  Serial.write(message, 6);
-  digitalWrite(LEDPIN, HIGH);
-}
