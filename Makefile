@@ -46,9 +46,15 @@ TEST_BINS = $(TEST_DIR_BIN)/test_osc_stdin \
 			$(TEST_DIR_BIN)/test_termios
 
 # compiler and flags
+STD = --std=c99
+UNAME = $(shell uname)
+ifeq ($(UNAME), Linux)
+STD = --std=gnu99
+endif
+
 CC = gcc
 CFLAGS_PROD = -DNDEBUG
-CFLAGS = --std=c99 --pedantic --pedantic-errors -Wall -Wno-unused $(INCLUDE)
+CFLAGS = $(STD) --pedantic --pedantic-errors -Wall -Wno-unused $(INCLUDE)
 
 # # # # # # # # # #
 # main directives #
