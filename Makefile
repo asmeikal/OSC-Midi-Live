@@ -38,13 +38,17 @@ TEST_DIR_SRC = $(SRC_DIR)/test
 TEST_DIR_OBJ = $(OBJ_DIR)/test
 TEST_DIR_BIN = $(BIN_DIR)/test
 
-# TEST_OBJS = $(TEST_DIR_OBJ)/...
-# TEST_BINS = $(TEST_DIR_BIN)/...
+TEST_OBJS = $(TEST_DIR_OBJ)/test_osc_stdin.o \
+			$(TEST_DIR_OBJ)/test_arduinocomms.o \
+			$(TEST_DIR_OBJ)/test_termios.o
+TEST_BINS = $(TEST_DIR_BIN)/test_osc_stdin \
+			$(TEST_DIR_BIN)/test_arduinocomms \
+			$(TEST_DIR_BIN)/test_termios
 
 # compiler and flags
 CC = gcc
-# CFLAGS_PROD = -DNDEBUG
-CFLAGS = --std=c99 --pedantic --pedantic-errors -Wall -Wno-unused $(INCLUDE) $(CFLAGS_PROD)
+CFLAGS_PROD = -DNDEBUG
+CFLAGS = --std=c99 --pedantic --pedantic-errors -Wall -Wno-unused $(INCLUDE)
 
 # # # # # # # # # #
 # main directives #
@@ -81,9 +85,13 @@ $(TEST_BINS): $(LIB) $(TEST_OBJS)
 # other  directives #
 # # # # # # # # # # #
 
+prod: CFLAGS += $(CFLAGS_PROD)
+prod: all
+
 all: $(BINARIES)
 
 tests: $(TEST_BINS)
+tests: all
 
 clean: 
 	rm -rf $(LIB_DIR)
