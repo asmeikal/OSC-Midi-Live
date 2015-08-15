@@ -3,10 +3,7 @@
 
 #include <Select.h>
 
-#include <termios.h>
-#include <unistd.h>
-
-int connectArduino(char *path, speed_t speed);
+int connectArduino(char *path, int speed);
 void readFromArduino(struct fd_info *fdi);
 
 #endif
