@@ -42,8 +42,8 @@ int connectArduino(char *path, speed_t speed)
     struct termios settings;
     tcgetattr(fd, &settings);
 
-    cfsetispeed(&settings, speed); /* baud rate */
-    cfsetospeed(&settings, speed); /* baud rate */
+    cfsetispeed(&settings, speed); /* input baud rate */
+    cfsetospeed(&settings, speed); /* output baud rate */
     settings.c_cflag &= ~PARENB; /* no parity */
     settings.c_cflag &= ~CSTOPB; /* 1 stop bit */
     // settings.c_cflag &= ~CSIZE;
