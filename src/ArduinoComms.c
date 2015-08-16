@@ -117,7 +117,13 @@ void readFromArduino(struct fd_info *fdi)
 
     n = read(fdi->fd, fdi->buffer + fdi->buff_full, fdi->buff_size - fdi->buff_full);
 
-    if(0 > n) {
+    DEBUG_ASSERT(n > 0, "arduino disconnected\n");
+    if(0 == n) {
+        /* disconnected */
+        // TODO: add a 'restart' function for each file descriptor
+        return;
+    }
+    else if(0 > n) {
         /* error */
         return;
     }
