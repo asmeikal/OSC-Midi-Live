@@ -2,3 +2,5 @@ _*
 bin/
 obj/
 lib/
+*.csv
+*.html
