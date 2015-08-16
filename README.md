@@ -35,4 +35,4 @@ The 10k &#8486; resistor gave each blow on the drumpad a shorter "life", which i
 [use_a_zener]: http://forum.arduino.cc/index.php?topic=41149.msg299767#msg299767 "Arduino Forum: reading piezo velocity"
 [knocksensor]: https://www.arduino.cc/en/Tutorial/KnockSensor "Arduino: knock sensor"
 
-[piezo]: docs/img/schematics_piezo.svg "Piezo schematics - made with iCircuit (http://icircuitapp.com)"
+[piezo]: https://raw.github.com/asmeikal/OSC-Live-Midi/master/docs/img/schematics_piezo.svg "Piezo schematics - made with iCircuit (http://icircuitapp.com)"
