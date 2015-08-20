@@ -35,10 +35,9 @@ size_t bundle_sent = 0;
 /**
  * Returns >= 0 on success, sets errno on failure.
  */
-int createSocket(char *address, unsigned short port)
+int createSocket(const char *address, const unsigned short port)
 {
     int rv;
-    errno = 0;
 
     DEBUG_ASSERT(NULL != address, "NULL pointer argument\n");
     if(NULL == address) {

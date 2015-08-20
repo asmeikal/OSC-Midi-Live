@@ -3,7 +3,7 @@
 
 #include <Select.h>
 
-int createSocket(char *address, unsigned short port);
+int createSocket(const char *address, const unsigned short port);
 void sendAllBufferedBundles(struct fd_info *fdi);
 
 #endif
