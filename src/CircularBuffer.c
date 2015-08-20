@@ -69,8 +69,6 @@ CircularBuffer createBuffer(size_t size)
  */
 int addToBuffer(CircularBuffer b, void *el, size_t el_s)
 {
-    errno = 0;
-
     DEBUG_ASSERT(NULL != b,  "NULL pointer argument\n");
     DEBUG_ASSERT(NULL != el, "NULL pointer argument\n");
     if(NULL == b) {
