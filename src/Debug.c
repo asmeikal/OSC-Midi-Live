@@ -10,7 +10,7 @@ void full_print(const char *msg, const unsigned int size)
 #ifndef NDEBUG
     unsigned int i;
     for(i = 0; i < size; ++i) {
-        printf("%2X ", (unsigned char) msg[i]);
+        printf("%02X ", (unsigned char) msg[i]);
         if(((i+1) % 4) == 0) {
             printf(" ");
         }
