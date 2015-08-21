@@ -81,17 +81,32 @@ elif (( $# == 0 ))
     for l in $param_devices
     do
         devname=`echo $l | cut -f1 -d':'`
+	if [[ ! -c $devname ]]
+	    then
+	    echo "Device '$devname' not available."
+	    quit 1
+	fi
         inputs=`echo $l | cut -f2 -d':'`
         echo "Checking device '$devname' availability."
         cmd_nest="python3 check_device.py $devname $param_baud $inputs"
-        run_cmd "$cmd_nest"
-        if (( $? == 1 ))
+	trials=0
+	while (( $trials < 10 ))
+	do
+            run_cmd "$cmd_nest"
+	    retval=$?
+	    if (( $retval == 0 ))
             then
-            echo "Device '$devname' not available."
-            quit 1
-        else
-            echo "Device '$devname' ready."
-        fi
+		echo "Device '$devname' ready."
+		break
+            else
+		trials=$(( $trials + 1 ))
+		if (( $trials >= 10 ))
+		then
+		    echo "Device '$devname' not available."
+		    quit 1
+		fi
+            fi
+	done
     done
 
     echo
