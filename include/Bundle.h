@@ -16,7 +16,7 @@ struct Bundle {
 };
 
 // add To Bundle
-int addToBundle(char *msg, size_t msg_s);
+int addToBundle(const char *msg, const size_t msg_s);
 void pokeBundle(void);
 
 #endif

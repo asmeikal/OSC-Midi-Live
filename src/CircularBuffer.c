@@ -41,7 +41,7 @@ struct circularBuffer {
  * 
  * Critical function: allowed to fail.
  */
-CircularBuffer createBuffer(size_t size)
+CircularBuffer createBuffer(const size_t size)
 {
 
     CircularBuffer ret = malloc(sizeof (struct circularBuffer));
@@ -67,7 +67,7 @@ CircularBuffer createBuffer(size_t size)
  * Returns 0 on success, sets errno on failure.
  * Non-critical function: not allowed to fail.
  */
-int addToBuffer(CircularBuffer b, void *el, size_t el_s)
+int addToBuffer(CircularBuffer b, const void *el, const size_t el_s)
 {
     DEBUG_ASSERT(NULL != b,  "NULL pointer argument\n");
     DEBUG_ASSERT(NULL != el, "NULL pointer argument\n");
@@ -131,13 +131,7 @@ int popTopOfBuffer(CircularBuffer b, void *res_c, size_t *res_s)
         return -1;
     }
 
-    if(NULL == b) {
-        errno = EINVAL;
-        *res_s = 0;
-        return -1;
-    }
-
-    if(NULL == res_c) {
+    if((NULL == b) || (NULL == res_c)) {
         errno = EINVAL;
         *res_s = 0;
         return -1;

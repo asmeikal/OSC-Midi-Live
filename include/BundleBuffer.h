@@ -6,7 +6,7 @@
 // init Buffer
 int initBundleBuffer(void);
 // add To Buffer
-int addToBundleBuffer(char *b_contents, size_t length);
+int addToBundleBuffer(const char *b_contents, const size_t length);
 // get From Buffer
 int getTopOfBundleBuffer(char *res_c, size_t *res_s);
 

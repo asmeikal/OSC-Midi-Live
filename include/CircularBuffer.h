@@ -6,9 +6,9 @@
 typedef struct circularBuffer *CircularBuffer;
 
 // create buffer (size)
-CircularBuffer createBuffer(size_t size);
+CircularBuffer createBuffer(const size_t size);
 // add to buffer (void *, size)
-int addToBuffer(CircularBuffer b, void * el, size_t el_s);
+int addToBuffer(CircularBuffer b, const void * el, const size_t el_s);
 // void *pop top of buffer ()
 int popTopOfBuffer(CircularBuffer b, void *res_c, size_t *res_s);
 

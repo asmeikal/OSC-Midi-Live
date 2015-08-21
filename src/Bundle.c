@@ -81,7 +81,7 @@ static int startBundle(void)
 /**
  * Pre: the first 4 bytes of msg represent htonl(msg_s - 4).
  */
-int addToBundle(char *msg, size_t msg_s)
+int addToBundle(const char *msg, const size_t msg_s)
 {
     int rv;
 

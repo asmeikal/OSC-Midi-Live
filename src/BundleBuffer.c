@@ -39,7 +39,7 @@ int initBundleBuffer(void)
 }
 // add To Buffer
 
-int addToBundleBuffer(char *b_contents, size_t length)
+int addToBundleBuffer(const char *b_contents, const size_t length)
 {
     return addToBuffer(bundle_buffer, (void *) b_contents, length);
 }
