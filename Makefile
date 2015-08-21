@@ -17,11 +17,13 @@ OBJ_LIBS = $(OBJ_DIR)/ArduinoComms.o \
 		   $(OBJ_DIR)/Bundle.o \
 		   $(OBJ_DIR)/BundleBuffer.o \
 		   $(OBJ_DIR)/CircularBuffer.o \
+		   $(OBJ_DIR)/Debug.o \
+		   $(OBJ_DIR)/MemoryManipulation.o \
 		   $(OBJ_DIR)/MessageBuffer.o \
+		   $(OBJ_DIR)/PatternMatcher.o \
 		   $(OBJ_DIR)/Select.o \
 		   $(OBJ_DIR)/Sockets.o \
-		   $(OBJ_DIR)/Debug.o \
-		   $(OBJ_DIR)/MemoryManipulation.o
+		   $(OBJ_DIR)/StringSplit.o
 
 OBJ_BINS = $(OBJ_DIR)/oscLiveMain.o
 
@@ -40,10 +42,12 @@ TEST_DIR_BIN = $(BIN_DIR)/test
 
 TEST_OBJS = $(TEST_DIR_OBJ)/test_osc_stdin.o \
 			$(TEST_DIR_OBJ)/test_arduinocomms.o \
-			$(TEST_DIR_OBJ)/test_termios.o
+			$(TEST_DIR_OBJ)/test_termios.o \
+			$(TEST_DIR_OBJ)/test_matchpattern.o
 TEST_BINS = $(TEST_DIR_BIN)/test_osc_stdin \
 			$(TEST_DIR_BIN)/test_arduinocomms \
-			$(TEST_DIR_BIN)/test_termios
+			$(TEST_DIR_BIN)/test_termios \
+			$(TEST_DIR_BIN)/test_matchpattern
 
 # compiler and flags
 STD = --std=c99
