@@ -24,30 +24,30 @@ fd_set  fds_write;
 * Local functions declaration
 ************************************************************/
 
-static int registerFD(struct fd_info registry[], int fd, CallBack function, unsigned int buffsize, void *extra_info);
-static int unregisterFD(struct fd_info registry[], int fd);
+static int registerFD(struct fd_info registry[], const int fd, const CallBack function, const unsigned int buffsize, void *extra_info);
+static int unregisterFD(struct fd_info registry[], const int fd);
 static void buildFDSet(struct fd_info registry[], fd_set *fds);
 
 /************************************************************
 * Register/unregister functions
 ************************************************************/
 
-int registerReadFD(int fd, CallBack function, unsigned int buffsize, void *extra_info)
+int registerReadFD(const int fd, const CallBack function, const unsigned int buffsize, void *extra_info)
 {
     return registerFD(registered_fds_read, fd, function, buffsize, extra_info);
 }
 
-int  unregisterReadFD(int fd)
+int  unregisterReadFD(const int fd)
 {
     return unregisterFD(registered_fds_read, fd);
 }
 
-int registerWriteFD(int fd, CallBack function, void *extra_info)
+int registerWriteFD(const int fd, const CallBack function, void *extra_info)
 {
     return registerFD(registered_fds_write, fd, function, 0, extra_info);
 }
 
-int  unregisterWriteFD(int fd)
+int  unregisterWriteFD(const int fd)
 {
     return unregisterFD(registered_fds_write, fd);
 }
@@ -58,7 +58,7 @@ int  unregisterWriteFD(int fd)
  *
  * Returns 0 on success, non-zero on failure.
  */
-static int registerFD(struct fd_info registry[], int fd, CallBack function, unsigned int buffsize, void *extra_info)
+static int registerFD(struct fd_info registry[], const int fd, const CallBack function, const unsigned int buffsize, void *extra_info)
 {
     int i, fdNotInserted = 1;
 
@@ -108,7 +108,7 @@ static int registerFD(struct fd_info registry[], int fd, CallBack function, unsi
 /**
  * Removes 'fd' from the file descriptors list.
  */
-static int unregisterFD(struct fd_info registry[], int fd)
+static int unregisterFD(struct fd_info registry[], const int fd)
 {
     int i, fdNotFound = 1;
 

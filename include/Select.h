@@ -20,10 +20,10 @@ struct fd_info {
     void *extra_info;
 };
 
-int registerReadFD(int fd, CallBack function, unsigned int buffsize, void *extra_info);
-int  unregisterReadFD(int fd);
-int registerWriteFD(int fd, CallBack function, void *extra_info);
-int  unregisterWriteFD(int fd);
+int registerReadFD(const int fd, const CallBack function, const unsigned int buffsize, void *extra_info);
+int  unregisterReadFD(const int fd);
+int registerWriteFD(const int fd, const CallBack function, void *extra_info);
+int  unregisterWriteFD(const int fd);
 
 void buildReadFDSet(void);
 void buildWriteFDSet(void);
