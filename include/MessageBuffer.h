@@ -11,5 +11,6 @@ int addToMessageBuffer(MessageBuffer mb, unsigned char *values, unsigned int var
 int flushMessageBuffer(MessageBuffer mb);
 
 unsigned int getVarNumber(MessageBuffer mb);
+char *getDeviceAddress(MessageBuffer mb);
 
 #endif

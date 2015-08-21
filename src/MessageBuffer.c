@@ -220,6 +220,17 @@ unsigned int getVarNumber(MessageBuffer mb)
 
 }
 
+char *getDeviceAddress(MessageBuffer mb)
+{
+    DEBUG_ASSERT(NULL != mb, "NULL pointer as argument.\n");
+    if((NULL == mb)) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    return mb->address;  
+}
+
 /************************************************************
 * Local functions definition
 ************************************************************/
