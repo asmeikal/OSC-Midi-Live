@@ -113,14 +113,11 @@ void readFromArduino(struct fd_info *fdi)
 
     n = read(fdi->fd, fdi->buffer + fdi->buff_full, fdi->buff_size - fdi->buff_full);
 
-    DEBUG_ASSERT(n > 0, "arduino disconnected\n");
-    if(0 == n) {
-        /* disconnected */
+    DEBUG_ASSERT(0 < n, "arduino disconnected\n");
+    if(0 > n) {
+        /* disconnected or error */
         // TODO: add a 'restart' function for each file descriptor
-        return;
-    }
-    else if(0 > n) {
-        /* error */
+        ERROR_PRINT("Device '%s' disconnected.\n", getDeviceAddress((MessageBuffer) fdi->extra_info));
         return;
     }
     else {
