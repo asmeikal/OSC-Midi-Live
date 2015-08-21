@@ -3,7 +3,7 @@
 
 #include <Select.h>
 
-int connectArduino(char *path, int speed);
+int connectArduino(const char *path, const int speed);
 void readFromArduino(struct fd_info *fdi);
 
 #endif

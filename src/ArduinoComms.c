@@ -1,5 +1,8 @@
 #include <ArduinoComms.h>
 
+#include <Serial_protocol.h>
+
+#include <PatternMatcher.h>
 #include <MessageBuffer.h>
 #include <Debug.h>
 
@@ -11,22 +14,15 @@
 #include <termios.h>
 #include <unistd.h>
 
-
-/************************************************************
-* Defines and macros
-************************************************************/
-
-#define MSG_END     "\000\000\377"
-
 /************************************************************
 * Local functions declaration
 ************************************************************/
 
 static int parseBuffer(struct fd_info *fdi);
-static int getValues(unsigned char *dst, unsigned char *src, unsigned int var_n, int end);
+static int getValues(unsigned char *dst, const unsigned char *src, const unsigned int var_n);
 
-static speed_t getBaudRateFromInt(int baud);
-static int getIntFromBaudRate(speed_t baud);
+static speed_t getBaudRateFromInt(const int baud);
+static int getIntFromBaudRate(const speed_t baud);
 
 /************************************************************
 * Functions definition
@@ -37,7 +33,7 @@ static int getIntFromBaudRate(speed_t baud);
  * Non-critical function: not allowed to fail.
  * Return <0 on failure.
  */
-int connectArduino(char *path, int speed)
+int connectArduino(char const *path, int const speed)
 {
     int fd, rv;
 
@@ -154,9 +150,9 @@ static int parseBuffer(struct fd_info *fdi)
 
     MessageBuffer mb = (MessageBuffer) fdi->extra_info;
     unsigned int var_n = getVarNumber(mb), msg_size, free_space;
-    int i, rv;
+    int i, rv, start;
 
-    msg_size = (var_n + 1) * 2;
+    msg_size = MSG_LEN(var_n);
 
     unsigned char *values = malloc(var_n);
 
@@ -165,40 +161,23 @@ static int parseBuffer(struct fd_info *fdi)
         return -1;
     }
 
-    int done = 0;
+    // TODO: is this right? test it
 
-    while((3 < fdi->buff_full) && (!done)) {
-        
-        /* All messages end with the sequence 0x00 0x00 0xFF */
+    while(0 <= (start = matchMessage(fdi->buffer, fdi->buff_full, var_n))) {
+        rv = getValues(values, (unsigned char *) fdi->buffer+start, var_n);
 
-        /* Find the first occurrence of said sequence */
-        for(i = 0; (i+3) <= fdi->buff_full; ++i) {
-            if(0 == memcmp(fdi->buffer+i, MSG_END, 3)) {
-                /* Get values from said sequence */
-                rv = getValues(values, (unsigned char *) fdi->buffer, var_n, i);
-
-                /* If sequence is legal, send values */
-                if(0 == rv) {
-                    (void) addToMessageBuffer(mb, values, var_n);
-                }
-
-                /* Shift buffer backwards */
-                memmove(fdi->buffer, fdi->buffer + (i+3), fdi->buff_full - (i+3));
-                fdi->buff_full -= (i+3);
-
-                break;
-            }
-            else if((i+3) == fdi->buff_full) {
-                /* We reached the end of buffer without results */
-                done = 1;
-            }
+        if(0 == rv) {
+            (void) addToMessageBuffer(mb, values, var_n);
         }
+        memmove(fdi->buffer, fdi->buffer + (start + msg_size), fdi->buff_full - (start + msg_size));
+        fdi->buff_full -= (start + msg_size);
     }
 
     /* if there is not enough space for a full message, free enough space */
     free_space = fdi->buff_size - fdi->buff_full;
     if(msg_size > free_space) {
         memmove(fdi->buffer, fdi->buffer + (msg_size - free_space), msg_size - free_space);
+        fdi->buff_full -= (msg_size - free_space);
     }
 
     free(values);
@@ -206,35 +185,34 @@ static int parseBuffer(struct fd_info *fdi)
     return 0;
 }
 
-static int getValues(unsigned char *dst, unsigned char *src, unsigned int var_n, int end)
+/**
+ * Pre: a legal Serial_protocol message containing var_n variables 
+ * starts at [dst].
+ */
+static int getValues(unsigned char *dst, const unsigned char *src, const unsigned int var_n)
 {
     DEBUG_ASSERT(NULL != dst, "NULL pointer argument\n");
     DEBUG_ASSERT(NULL != src, "NULL pointer argument\n");
+    DEBUG_ASSERT(0 < var_n, "NULL pointer argument\n");
 
-    if((NULL == dst) || (NULL == src) || (end != ((var_n * 2) - 1))) {
+    if((NULL == dst) || (0 >= var_n)) {
+        return -1;
+    }
+
+    if (NULL == src) {
         memset(dst, 0, var_n);
         return -1;
     }
 
-    int i, k;
-
-    for(i = 0, k = 0; i < end; ++i) {
-        if(i % 2) { // pari, == 0
-            if(0 != src[i]) {
-                memset(dst, 0, var_n);
-                return -1;
-            }
-        }
-        else { // dispari, valore
-            dst[k] = src[i];
-            ++k;
-        }
+    int i;
+    for(i = 0; i < var_n; ++i) {
+        dst[i] = src[(i*2)+2];
     }
 
     return 0;
 }
 
-static speed_t getBaudRateFromInt(int baud)
+static speed_t getBaudRateFromInt(const int baud)
 {
     switch(baud) {
         case 0:
@@ -281,7 +259,7 @@ static speed_t getBaudRateFromInt(int baud)
 
 }
 
-static int getIntFromBaudRate(speed_t baud)
+static int getIntFromBaudRate(const speed_t baud)
 {
     switch(baud) {
         case B0:
