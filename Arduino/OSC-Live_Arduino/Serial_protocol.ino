@@ -12,7 +12,7 @@ void buildMessage(unsigned char message[], const struct pin_info pins[], const u
     message[(i*2)+3] = MIDBITS;
   }
   
-  message[MSG_SIZE(pin_num)-2] = message[MSG_SIZE(pin_num)-1] = ENDBITS;
+  message[MSGSIZE(pin_num)-2] = message[MSGSIZE(pin_num)-1] = ENDBITS;
   
 }
 

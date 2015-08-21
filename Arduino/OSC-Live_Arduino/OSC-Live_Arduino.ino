@@ -17,7 +17,7 @@ const struct pin_info pins[PIN_NUM] =
       {{A0, GETVALUE(A0)},
        {A1, GETVALUE(A1)}};
 
-unsigned char message[MSG_SIZE(PIN_NUM)] = {0};
+unsigned char message[MSGSIZE(PIN_NUM)] = {0};
 
 /**************************
 * Setup & main loop
@@ -41,6 +41,6 @@ void setup() {
 void loop() {
   buildMessage(message, pins, PIN_NUM);
 
-  Serial.write(message, MSG_SIZE(PIN_NUM));
+  Serial.write(message, MSGSIZE(PIN_NUM));
 }
 
