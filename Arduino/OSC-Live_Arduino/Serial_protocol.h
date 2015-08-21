@@ -10,10 +10,12 @@
 #define SENDMAX   255
 #define SENDMIN   0
 
-#define SCALE(x)  map((x), READMIN, READMAX, SENDMIN, SENDMAX)
+#define SCALE(x)    map((x), READMIN, READMAX, SENDMIN, SENDMAX)
+#define MSGSIZE(x)  2+((x)*2)+2
 
+#define STARTBITS 0xFE
 #define MIDBITS   0x00
-#define ENDBITS   0xFF
+#define ENDBITS   0xEF
 
 /**************************
 * Structs & typedefs
@@ -30,7 +32,7 @@ struct pin_info {
 * Function definition
 **************************/
 
-void buildMessage(unsigned char message[], struct pin_info pins[], unsigned int pin_num);
+void buildMessage(unsigned char message[], const struct pin_info pins[], const unsigned int pin_num);
 
 #endif
 

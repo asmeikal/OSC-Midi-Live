@@ -7,7 +7,7 @@
 * READ function for drum pads
 *******************************************/
 
-#define THRESHOLD     600
+#define THRESHOLD     400
 #define TIME_WAIT     50L * 1000L   /* 50.000 usec = 50 msec */
 
 /*
@@ -26,7 +26,7 @@
 #define GETVALUE(x)   readValue ## x
 
 #define DEFINE_READFUNC(x)  \
-int readValue ## x (unsigned char pin) { \
+int readValue ## x (const unsigned char pin) { \
   int ret = analogRead(pin); \
   unsigned long t = micros(); \
   if(t < TIMER(x) + TIME_WAIT) { \

@@ -13,12 +13,11 @@
 SETUP_DRUM_PAD(A0)
 SETUP_DRUM_PAD(A1)
 
-struct pin_info pins[PIN_NUM] = 
+const struct pin_info pins[PIN_NUM] = 
       {{A0, GETVALUE(A0)},
        {A1, GETVALUE(A1)}};
 
-unsigned char message[(PIN_NUM + 1) * 2] = {0};
-unsigned int message_s = (PIN_NUM + 1) * 2;
+unsigned char message[MSG_SIZE(PIN_NUM)] = {0};
 
 /**************************
 * Setup & main loop
@@ -42,6 +41,6 @@ void setup() {
 void loop() {
   buildMessage(message, pins, PIN_NUM);
 
-  Serial.write(message, message_s);
+  Serial.write(message, MSG_SIZE(PIN_NUM));
 }
 
