@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <sys/time.h>
 
-void full_print(char *msg, unsigned int size);
+void full_print(const char *msg, const unsigned int size);
 
 unsigned long long Debug_timestamp_millisec(void);
 #define TIMESTAMP (Debug_timestamp_millisec())

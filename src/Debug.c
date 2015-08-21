@@ -5,16 +5,17 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-void full_print(char *msg, unsigned int size)
+void full_print(const char *msg, const unsigned int size)
 {
 #ifndef NDEBUG
     unsigned int i;
     for(i = 0; i < size; ++i) {
-        if(isprint(msg[i]) && !isspace(msg[i])) {
-            printf("%c ", msg[i]);
+        printf("%2X ", (unsigned char) msg[i]);
+        if(((i+1) % 4) == 0) {
+            printf(" ");
         }
-        else {
-            printf("\\%d ", (unsigned char) msg[i]);
+        if(((i+1) % 16) == 0) {
+            printf("\n");
         }
     }
     printf("\n");
