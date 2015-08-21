@@ -10,12 +10,20 @@ void full_print(const char *msg, const unsigned int size);
 unsigned long long Debug_timestamp_millisec(void);
 #define TIMESTAMP (Debug_timestamp_millisec())
 
-#define ERROR_PRINT(...)    \
-        do { \
-            fprintf(stderr, "[timestamp=%llu] %s:%d: ", TIMESTAMP, __FILE__, __LINE__); \
-            fprintf(stderr, __VA_ARGS__); \
-            exit(EXIT_FAILURE); \
-        } while(0)
+#ifndef NDEBUG
+    #define ERROR_PRINT(...)    \
+            do { \
+                fprintf(stderr, "[timestamp=%llu] %s:%d: ", TIMESTAMP, __FILE__, __LINE__); \
+                fprintf(stderr, __VA_ARGS__); \
+                exit(EXIT_FAILURE); \
+            } while(0)
+#else
+    #define ERROR_PRINT(...) \
+            do { \
+                fprintf(stderr, __VA_ARGS__); \
+                exit(EXIT_FAILURE); \
+            } while (0)
+#endif
 
 #define DEBUG_ASSERT_CRITICAL(cond, ...) \
         do { \
