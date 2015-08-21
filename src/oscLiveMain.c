@@ -93,10 +93,10 @@ int main(const int argc, const char *argv[])
     if(1 == argc) {
         free(param_ip);
         free(param_baudrate);
-        char *tmp = *param_arduino;
-        while(NULL != tmp) {
-            free(tmp);
-            ++tmp;
+        int i = 0;
+        while(NULL != param_arduino[i]) {
+            free(param_arduino[i]);
+            ++i;
         }
         free(param_arduino);
     }
