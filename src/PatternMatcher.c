@@ -13,6 +13,8 @@
 ************************************************************/
 
 static int matchPattern(const char *string, const unsigned int string_l, const char *pattern, const char *lookup, const unsigned int pattern_l);
+static char *getPattern(const unsigned int var_n);
+static char *getLookup(const unsigned int var_n);
 
 /************************************************************
 * Function definition
@@ -59,6 +61,28 @@ int matchMessage(const char *buffer, const unsigned int buff_len, const unsigned
     lookup[pattern_l-2] = lookup[pattern_l-1] = LU_TRUE;
 
     return matchPattern(buffer, buff_len, pattern, lookup, pattern_l);
+}
+
+int fastMatchMessage(const char *buffer, const unsigned int buff_len, const unsigned int var_n)
+{
+    DEBUG_ASSERT(NULL != buffer, "matchMessage: null pointer argument\n");
+    if(NULL == buffer) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    DEBUG_ASSERT(MAX_VARS >= var_n, "matchMessage: var_n too big\n");
+    if(MAX_VARS < var_n) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(0 == buff_len) {
+        return -1;
+    }  
+
+    return matchPattern(buffer, buff_len, getPattern(var_n), getLookup(var_n), MSG_LEN(var_n));
+
 }
 
 struct match {
@@ -162,4 +186,69 @@ static int matchPattern(const char *string, const unsigned int string_l, const c
     }
 
     return -1;
+}
+
+static char *getPattern(const unsigned int var_n)
+{
+    switch(var_n) {
+        case 1:
+            return "\xFE\xFE\x00\x00\xEF\xEF";
+        case 2:
+            return "\xFE\xFE\x00\x00\x00\x00\xEF\xEF";
+        case 3:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 4:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 5:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 6:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 7:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 8:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 9:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 10:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 11:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        case 12:
+            return "\xFE\xFE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xEF\xEF";
+        default:
+            return NULL;
+    }
+}
+
+static char *getLookup(const unsigned int var_n)
+{
+    switch(var_n) {
+        case 1:
+            return "\xFF\xFF\x00\xFF\xFF\xFF";
+        case 2:
+            return "\xFF\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 3:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 4:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 5:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 6:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 7:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 8:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 9:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 10:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 11:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        case 12:
+            return "\xFF\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\xFF\xFF";
+        default:
+            return NULL;
+    }
+
 }

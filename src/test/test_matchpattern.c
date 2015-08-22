@@ -17,7 +17,7 @@ int main(void)
     full_print(msgs, len);
     fprintf(stderr, "\n");
 
-    while(0 <= (start = matchMessage(msgs, len, var_n))) {
+    while(0 <= (start = fastMatchMessage(msgs, len, var_n))) {
         fprintf(stderr, "start of pattern: %d\n", start);
         fprintf(stderr, "Matched:\n");
         full_print(msgs+start, msg_len);
