@@ -5,3 +5,4 @@ lib/
 docs/
 *.csv
 *.html
+.config
