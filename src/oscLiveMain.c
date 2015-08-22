@@ -66,7 +66,7 @@ int main(const int argc, const char *argv[])
     /* start TCP connection */
     socket = createSocket(param_ip, 8000);
     DEBUG_ASSERT_CRITICAL(0 <= socket, "problem starting socket: %s\n", strerror(errno));
-    rv = registerWriteFD(socket, sendAllBufferedBundles, NULL);
+    rv = registerWriteFD(socket, "TCP socket", sendAllBufferedBundles, NULL);
     DEBUG_ASSERT_CRITICAL(0 == rv, "can't register socket\n");
 
     /**
@@ -85,7 +85,7 @@ int main(const int argc, const char *argv[])
         DEBUG_ASSERT_CRITICAL(0 <= fd, "can't open serial %s: %s\n", param_arduino[dev_n], strerror(errno));
         (void) snprintf(name, 16, "arduino%d", dev_n);
         mb = createMessageBuffer(atoi(dev_vars), name);
-        rv = registerReadFD(fd, readFromArduino, 256, (void *) mb);
+        rv = registerReadFD(fd, dev_name, readFromArduino, 256, (void *) mb);
         DEBUG_ASSERT_CRITICAL(0 == rv, "can't register arduino #%d\n", dev_n);
         ++dev_n;
     }
@@ -102,6 +102,8 @@ int main(const int argc, const char *argv[])
     }
 
     DEBUG_PRINT("started\n");
+
+    // setup screen
 
     while(1) {
         (void) buildReadFDSet();
@@ -121,6 +123,7 @@ int main(const int argc, const char *argv[])
             continue;
         }
         (void) pokeBundle();
+        // refresh screen
     }
 
     return 0;

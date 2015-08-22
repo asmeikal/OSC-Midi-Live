@@ -70,13 +70,13 @@ int main(int argc, char *argv[])
     // create and register read FD (stdin)
     // create message buffer
     MessageBuffer mb = createMessageBuffer(1, "stdin");
-    registerReadFD(0, test_callback, 256, (void *) mb);
+    registerReadFD(0, "stdin", test_callback, 256, (void *) mb);
 
     // create and register write FD (socket to localhost:8000)
     int socket = createSocket(osc_address, 8000);
     DEBUG_ASSERT_CRITICAL(0 <= socket, "Problem starting socket: %s\n", strerror(errno));
 
-    registerWriteFD(socket, sendAllBufferedBundles, NULL);
+    registerWriteFD(socket, "TCP socket", sendAllBufferedBundles, NULL);
 
     while(1) {
         buildReadFDSet();

@@ -24,7 +24,7 @@ fd_set  fds_write;
 * Local functions declaration
 ************************************************************/
 
-static int registerFD(struct fd_info registry[], const int fd, const CallBack function, const unsigned int buffsize, void *extra_info);
+static int registerFD(struct fd_info registry[], const int fd, const char *name, const CallBack function, const unsigned int buffsize, void *extra_info);
 static int unregisterFD(struct fd_info registry[], const int fd);
 static void buildFDSet(struct fd_info registry[], fd_set *fds);
 
@@ -32,9 +32,9 @@ static void buildFDSet(struct fd_info registry[], fd_set *fds);
 * Register/unregister functions
 ************************************************************/
 
-int registerReadFD(const int fd, const CallBack function, const unsigned int buffsize, void *extra_info)
+int registerReadFD(const int fd, const char *name, const CallBack function, const unsigned int buffsize, void *extra_info)
 {
-    return registerFD(registered_fds_read, fd, function, buffsize, extra_info);
+    return registerFD(registered_fds_read, fd, name, function, buffsize, extra_info);
 }
 
 int  unregisterReadFD(const int fd)
@@ -42,9 +42,9 @@ int  unregisterReadFD(const int fd)
     return unregisterFD(registered_fds_read, fd);
 }
 
-int registerWriteFD(const int fd, const CallBack function, void *extra_info)
+int registerWriteFD(const int fd, const char *name, const CallBack function, void *extra_info)
 {
-    return registerFD(registered_fds_write, fd, function, 0, extra_info);
+    return registerFD(registered_fds_write, fd, name, function, 0, extra_info);
 }
 
 int  unregisterWriteFD(const int fd)
@@ -58,12 +58,17 @@ int  unregisterWriteFD(const int fd)
  *
  * Returns 0 on success, non-zero on failure.
  */
-static int registerFD(struct fd_info registry[], const int fd, const CallBack function, const unsigned int buffsize, void *extra_info)
+static int registerFD(struct fd_info registry[], const int fd, const char *name, const CallBack function, const unsigned int buffsize, void *extra_info)
 {
-    int i, fdNotInserted = 1;
+    int i, rv, fdNotInserted = 1;
 
     DEBUG_ASSERT(0 <= fd, "Invalid file descriptor\n");
     if(0 > fd) {
+        return fdNotInserted;
+    }
+
+    DEBUG_ASSERT(NULL != name, "Please provide a name\n");
+    if(NULL == name) {
         return fdNotInserted;
     }
 
@@ -79,12 +84,25 @@ static int registerFD(struct fd_info registry[], const int fd, const CallBack fu
             registry[i].extra_info  = extra_info;
             registry[i].buff_size   = buffsize;
             registry[i].buff_full   = 0;
+            registry[i].name  = (char *) malloc(strlen(name));
+            if(NULL == registry[i].name) {
+                /* If we can't allocate the buffer, I just try with the next empty slot. */
+                DEBUG_PRINT("Attempt to allocate name failed.\n");
+                continue;
+            }
+            rv = safe_memcpy(registry[i].name, name, strlen(name));
+            if(0 != rv) {
+                DEBUG_PRINT("memcpy failed.\n");
+                free(registry[i].name);
+                continue;
+            }
 
             if(0 < buffsize) {
                 registry[i].buffer  = (char *) malloc(buffsize);
                 if(NULL == registry[i].buffer) {
                     /* If we can't allocate the buffer, I just try with the next empty slot. */
                     DEBUG_PRINT("Attempt to allocate buffer failed.\n");
+                    free(registry[i].name);
                     continue;
                 }
             }
@@ -123,6 +141,7 @@ static int unregisterFD(struct fd_info registry[], const int fd)
            (registry[i].fd == fd)) 
         {
             registry[i].enabled = 0;
+            free(registry[i].name);
 
             if(NULL != registry[i].buffer) {
                 free(registry[i].buffer);
