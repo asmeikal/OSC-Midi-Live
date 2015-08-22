@@ -117,8 +117,7 @@ void readFromArduino(struct fd_info *fdi)
     if(0 > n) {
         /* disconnected or error */
         // TODO: add a 'restart' function for each file descriptor
-        ERROR_PRINT("Device '%s' disconnected.\n", getDeviceAddress((MessageBuffer) fdi->extra_info));
-        return;
+        ERROR_PRINT("Device '%s' disconnected.\n", fdi->name);
     }
     else {
         fdi->buff_full += n;
