@@ -154,7 +154,7 @@ void pokeBundle(void)
 
     struct timeval c_t = {0,0};
     gettimeofday(&c_t, NULL);
-    unsigned long diff = (c_t.tv_sec - local_bundle.birth.tv_sec) * 1000 * 1000 - c_t.tv_usec - local_bundle.birth.tv_usec;
+    unsigned long diff = TV_DIFF_USEC(c_t, local_bundle.birth);
 
     if(diff > BUNDLE_TTL) {
         (void) sendBundle();
