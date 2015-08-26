@@ -4,17 +4,24 @@
 # It can be easily configured running ./run.sh configure
 # and then, to start the main binary, just run ./run.sh.
 
-LOW='\033[0;33m'
+YLW='\033[0;33m'
 NC='\033[0m'
+
+IP_MATCH="(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})"
 
 quit()
 {
     echo; echo; exit $1
 }
 
+yellow_print()
+{
+    printf "${YLW}$@${NC}\n"
+}
+
 run_cmd()
 {
-    printf "${LOW}${1}${NC}\n"
+    yellow_print "${1}"
     eval $1
 }
 
@@ -37,9 +44,62 @@ if [[ $1 =~ "configure" ]]
 END
     echo
 
+    if [[ -f .config ]]
+        then
+        echo "Loading previous configuration."
+        read -d '\n' <.config old_param_ip old_param_baud old_param_devices
+        echo "Previous configuration was:"
+        echo "  [ip address]: ${old_param_ip}"
+        echo "  [baud rate]:  ${old_param_baud}"
+        echo "  [dev names]:  ${old_param_devices}"
+        echo "Press enter to skip input and keep a previous value."
+        echo
+    fi
+
     echo -n "[ip address]: "; read param_ip
+    if [[ -z $param_ip ]]
+        then
+        if [[ -z $old_param_ip ]]
+            then
+            echo "Please provide an input."
+            quit 1
+        fi
+        param_ip=$old_param_ip
+    elif [[ ! $param_ip =~ ^(${IP_MATCH}\.){3}(${IP_MATCH})$ ]]
+        then
+        echo "Illegal ip address."
+        quit 1
+    fi
+
     echo -n "[baud rate]: "; read param_baud
+    if [[ -z $param_baud ]]
+        then
+        if [[ -z $old_param_baud ]]
+            then
+            echo "Please provide an input."
+            quit 1
+        fi
+        param_baud=$old_param_baud
+    elif [[ ! $param_baud =~ ^[0-9]{1,}$ ]]
+        then
+        echo "Illegal baud rate."
+        quit 1
+    fi
+
     echo -n "[dev names]: "; read param_devices
+    if [[ -z $param_devices ]]
+        then
+        if [[ -z $old_param_devices ]]
+            then
+            echo "Please provide an input."
+            quit 1
+        fi
+        param_devices=$old_param_devices
+    elif [[ ! $param_devices =~ ^(/dev/[^:]+:[0-9]{1,2} ?){1,}$ ]]
+        then
+        echo "Illegal device(s) name(s)."
+        quit 1
+    fi
 
     echo $param_ip > .config
     echo $param_baud >> .config
@@ -81,32 +141,36 @@ elif (( $# == 0 ))
     for l in $param_devices
     do
         devname=`echo $l | cut -f1 -d':'`
-	if [[ ! -c $devname ]]
-	    then
-	    echo "Device '$devname' not available."
-	    quit 1
-	fi
-        inputs=`echo $l | cut -f2 -d':'`
         echo "Checking device '$devname' availability."
+    	if [[ ! -c $devname ]]
+    	    then
+    	    echo "Device '$devname' not connected."
+    	    quit 1
+    	fi
+        inputs=`echo $l | cut -f2 -d':'`
         cmd_nest="python3 check_device.py $devname $param_baud $inputs"
-	trials=0
-	while (( $trials < 10 ))
-	do
-            run_cmd "$cmd_nest"
-	    retval=$?
-	    if (( $retval == 0 ))
-            then
-		echo "Device '$devname' ready."
-		break
+    	trials=0
+        yellow_print $cmd_nest
+    	while (( $trials < 10 ))
+    	do
+            eval "$cmd_nest"
+    	    retval=$?
+    	    if (( $retval == 0 ))
+                then
+        		echo "Device '${devname}' ready."
+        		break
             else
-		trials=$(( $trials + 1 ))
-		if (( $trials >= 10 ))
-		then
-		    echo "Device '$devname' not available."
-		    quit 1
-		fi
+        		trials=$(( $trials + 1 ))
+                yellow_print "Attempt ${trials} failed."
+        		if (( $trials >= 10 ))
+        		then
+        		    echo "Device '${devname}' not available."
+                    echo "Maybe baud rate is not ${param_baud}?"
+                    echo "Maybe '${devname}' is not sending ${inputs} variables?"
+        		    quit 1
+        		fi
             fi
-	done
+    	done
     done
 
     echo
