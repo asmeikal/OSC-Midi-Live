@@ -10,7 +10,7 @@ void full_print(const char *msg, const unsigned int size);
 unsigned long long Debug_timestamp_millisec(void);
 #define TIMESTAMP (Debug_timestamp_millisec())
 
-#define T_DIFF(af,bf)   ((af).tv_sec - (bf).tv_sec) * 1000L * 1000L + \
+#define TV_DIFF_USEC(af,bf)   ((af).tv_sec - (bf).tv_sec) * 1000L * 1000L + \
                           ((af).tv_usec - (bf).tv_usec)
 
 #ifndef NDEBUG
@@ -42,7 +42,7 @@ unsigned long long Debug_timestamp_millisec(void);
                                 long long __dbg_diff
     #define START_TIMER()      do { gettimeofday(&__dbg_bf, NULL); } while(0)
     #define PRINT_TIMER(n)      do { gettimeofday(&__dbg_af, NULL); \
-                                __dbg_diff = T_DIFF(__dbg_af, __dbg_bf); \
+                                __dbg_diff = TV_DIFF_USEC(__dbg_af, __dbg_bf); \
                                 DEBUG_PRINT("%s: %lld usecs\n", (n), __dbg_diff); \
                                 } while (0)
 
