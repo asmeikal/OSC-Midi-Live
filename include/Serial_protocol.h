@@ -27,8 +27,9 @@
 #define LU_FALSE    '\x00'
 #define LU_TRUE     '\xFF'
 
-/* Each arduino has up to 12 analog pins */
-#define MAX_VARS        12
+/* Each arduino has up to 12 analog pins
+   (but we need more...) */
+#define MAX_VARS        20
 #define MAX_MSG_LEN     MSG_LEN(MAX_VARS)
 
 #endif
