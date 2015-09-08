@@ -17,19 +17,9 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-#ifndef __MESSAGE_BUFFER_H
-#define __MESSAGE_BUFFER_H
+#ifndef __COPYRIGHT_NOTICE_H
+#define __COPYRIGHT_NOTICE_H
 
-typedef struct messageBuffer* MessageBuffer;
-
-// create message buffer
-MessageBuffer createMessageBuffer(unsigned int var_n, char *address);
-// add to message buffer
-int addToMessageBuffer(MessageBuffer mb, unsigned char *values, unsigned int var_n);
-// flush message buffer
-int flushMessageBuffer(MessageBuffer mb);
-
-unsigned int getVarNumber(MessageBuffer mb);
-char *getDeviceAddress(MessageBuffer mb);
+void copyright_notice(char *pname, unsigned int year, char *author);
 
 #endif
