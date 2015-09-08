@@ -1,3 +1,5 @@
+**This is the first iteration of an ongoing project. The next iteration is in development.**
+
 # OSC-Midi-Live
 
 This is an experimental project. Our target is a live performane at the end of August (2015).
