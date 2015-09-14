@@ -20,6 +20,8 @@
 #ifndef __QUICK_PIN_ACCESS_H
 #define __QUICK_PIN_ACCESS_H
 
+#include "Arduino.h"
+
 /**
  * Source: http://forum.arduino.cc/index.php?topic=91079.0
  */

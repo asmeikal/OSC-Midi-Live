@@ -20,7 +20,9 @@
 #ifndef __DRUMPAD_READ_H
 #define __DRUMPAD_READ_H
 
+#include "Arduino.h"
 #include "Quick_Pin_Access.h"
+#include "Serial_protocol.h"
 
 /******************************************
   READ function for drum pads

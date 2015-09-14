@@ -20,6 +20,8 @@
 #ifndef __SERIAL_PROTOCOL_H
 #define __SERIAL_PROTOCOL_H
 
+#include "Arduino.h"
+
 /**************************
 * Defines & macros
 **************************/

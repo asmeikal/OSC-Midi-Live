@@ -20,6 +20,8 @@
 #ifndef __FAST_ANALOG_READ_H
 #define __FAST_ANALOG_READ_H
 
+#include "Arduino.h"
+
 /**
  * Source: http://forum.arduino.cc/index.php?topic=6549.0
  */
