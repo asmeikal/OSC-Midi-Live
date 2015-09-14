@@ -30,7 +30,7 @@
 int main(int argc, char *argv[]) 
 {
 
-    copyright_notice("OSC-Midi-Live", 2015, "Michele Laurenti");
+    copyright_notice("OSC-Midi-Live", "2015", "Michele Laurenti");
 
     DEBUG_ASSERT_CRITICAL(argc == 3, "usage: test_termios [dev_name] [baudrate]\n");
 

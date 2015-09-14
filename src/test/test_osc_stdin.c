@@ -74,7 +74,7 @@ void test_callback(struct fd_info *fdi)
 int main(int argc, char *argv[])
 {
 
-    copyright_notice("OSC-Midi-Live", 2015, "Michele Laurenti");
+    copyright_notice("OSC-Midi-Live", "2015", "Michele Laurenti");
 
     char osc_address[256];
     int rv, rvselect;

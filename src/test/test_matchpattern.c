@@ -30,7 +30,7 @@
 int main(void)
 {
 
-    copyright_notice("OSC-Midi-Live", 2015, "Michele Laurenti");
+    copyright_notice("OSC-Midi-Live", "2015", "Michele Laurenti");
 
     int var_n = 2;
     char msgs[] = "\x00\x0F\xFE\xFE\x01\x00\x01\x00\xEF\xEF\xFE\xFE\x00\x00\xEF\xEF\x67\xFE\x01\x00\x02\x00\xEF\xEF\xFE\xFE\xFE\x06\x00\x08\x00\xEF\xEF\x00";

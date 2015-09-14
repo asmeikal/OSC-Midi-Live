@@ -32,7 +32,7 @@ int getValues(unsigned char *dst, unsigned char *src, unsigned int var_n, int en
 
 int main(void) {
 
-    copyright_notice("OSC-Midi-Live", 2015, "Michele Laurenti");
+    copyright_notice("OSC-Midi-Live", "2015", "Michele Laurenti");
 
     int i, rv;
 

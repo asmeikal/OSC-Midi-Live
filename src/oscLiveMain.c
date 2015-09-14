@@ -37,7 +37,7 @@
 
 int main(const int argc, const char *argv[])
 {
-    copyright_notice("OSC-Midi-Live", 2015, "Michele Laurenti");
+    copyright_notice("OSC-Midi-Live", "2015", "Michele Laurenti");
 
     char osc_address[256], name[16], *dev_name, *dev_vars,
          *param_ip, *param_baudrate, **param_arduino;
@@ -125,8 +125,6 @@ int main(const int argc, const char *argv[])
 
     DEBUG_PRINT("started\n");
 
-    // setup screen
-
     while(1) {
         (void) buildReadFDSet();
         (void) buildWriteFDSet();
@@ -145,7 +143,6 @@ int main(const int argc, const char *argv[])
             continue;
         }
         (void) pokeBundle();
-        // refresh screen
     }
 
     return 0;

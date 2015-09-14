@@ -20,6 +20,6 @@
 #ifndef __COPYRIGHT_NOTICE_H
 #define __COPYRIGHT_NOTICE_H
 
-void copyright_notice(char *pname, unsigned int year, char *author);
+void copyright_notice(char *pname, char *years, char *author);
 
 #endif

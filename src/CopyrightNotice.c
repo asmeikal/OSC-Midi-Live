@@ -23,10 +23,10 @@
 #include <stdlib.h>
 #include <signal.h>
 
-void copyright_notice(char *pname, unsigned int year, char *author)
+void copyright_notice(char *pname, char *years, char *author)
 {
     printf("\n");
-    printf("%s Copyright (C) %d %s\nThis program comes with ABSOLUTELY NO WARRANTY; for details type 'w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type 'c' for details. Type 'q' to exit.\nType anything else to continue.\n", pname, year, author);
+    printf("%s Copyright (C) %s %s\nThis program comes with ABSOLUTELY NO WARRANTY; for details type 'w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type 'c' for details. Type 'q' to exit.\nType anything else to continue.\n", pname, years, author);
 
     char in[10];
 
