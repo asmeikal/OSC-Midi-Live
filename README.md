@@ -14,9 +14,55 @@ The communication is unidirectional: `Arduino => Raspberry Pi => OSCulator`.
 
 The main sensor we're using are DIY drumpads.
 
+## OSC-Midi-Live Library how to
+
+Let's assume `N` is the number of pins you're reading from. To use the library, in the `setup()` function, you'll need to start the serial at the desired speed (i.e. the baud rate you'll set on the receiving side), with:
+
+    Serial.begin(BAUD_RATE);
+
+You'll then need to create a vector of `struct pin_info` of size `N`. The `struct pin_info` is the following:
+
+    struct pin_info {
+      unsigned char pin;
+      int (*callBack)(unsigned char);
+    };
+
+i.e., the identifier of a pin number, and a callback function with a single parameter (that will be our pin number) and returning an `int`. You could write, as an example:
+
+    struct pin_info ReadInformation[3] = {
+      {A0, analogRead},
+      {A1, DRUMPAD_READ(A1)},
+      {6,  digitalReadOSC}
+    };
+
+You'll also need a vector of `unsigned char` of the appropriate size, to build and hold the message. There's the `MSG_SIZE(x)` macro for that:
+
+    unsigned char *message_buffer[MSG_SIZE(3)] = {0};
+
+In your `loop()` all you have to do is call the `buildMessage()` function, which has the following signature:
+
+    void buildMessage(unsigned char[], const struct pin_info[], const unsigned int);
+
+The first parameter is our `message_buffer`, the second parameter is our `ReadInformation` vector, and the third parameter will be our `N`. Then, write the `message_buffer` to serial:
+
+    Serial.write(message_buffer, MSG_SIZE(3));
+
+That's it. Quite ugly.
+
+On the receiving size, i.e. on the computer to which the Arduino (or the Arduinos) is connected, you'll have to run, in order:
+
+    $ ./run.sh build
+    $ ./run.sh configure
+      [ip address]: ...
+      [baud rate]: ...
+      [devices]: ...
+    $ ./run.sh
+
+It'll guide you during the configuration.
+
 ## Arduino => Raspberry Pi protocol
 
-Each Arduino will read the values from its connected sensors, and send those to the Raspberry Pi. The `analogRead` function will return an integer in the range `0-1023`, which we'll scale down to fit in the range `0-255`, to fit in one byte.
+Each Arduino will read the values from its connected sensors, and send those to the Raspberry Pi. The available read functions will return an integer in the range `0-1023`, which we'll scale down to fit in the range `0-255`, to fit in one byte.
 
 Each message begins with the (hex) sequence `FE FE`, followed by couples of a data byte and a NULL byte, ending with the sequence `EF EF`. The values 240, 212, 180 will be sent out as:
 
