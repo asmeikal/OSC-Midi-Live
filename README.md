@@ -16,6 +16,8 @@ The main sensor we're using are DIY drumpads.
 
 ## OSC-Midi-Live Library how to
 
+This project requires [**Python 3**][python3], which I call through the `python3` alias, and it's been tested only on *NIX systems (and very few of them).
+
 Let's assume `N` is the number of pins you're reading from. To use the library, in the `setup()` function, you'll need to start the serial at the desired speed (i.e. the baud rate you'll set on the receiving side), with:
 
     Serial.begin(BAUD_RATE);
@@ -87,6 +89,7 @@ The 10k &#8486; resistor gave each blow on the drumpad a shorter "life" (compare
 
 [patternsinc]: https://leanpub.com/patternsinc "Patterns in C"
 [osculator]: http://www.osculator.net "OSCulator"
+[python3]: https://www.python.org/download/releases/3.0/ "Python 3"
 [spikenzie1]: http://www.spikenzielabs.com/SpikenzieLabs/dkkai.html "Drum Kit - Kit AI"
 [spikenzie2]: http://www.spikenzielabs.com/SpikenzieLabs/DrumKitKit.html "Drum Kit - Kit"
 [arduinodrumkit]: https://arduinodrumkit.wordpress.com/2013/10/27/video-3-piece-drum-kit-demo-with-prototype-drum-pads/ "Video: drum kit demo"
